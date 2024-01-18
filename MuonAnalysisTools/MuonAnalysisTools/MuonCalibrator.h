@@ -15,10 +15,10 @@ namespace ATE {
 
 /// EDM-less dummy tool for muon momentum calibration
 ///
-/// It is not meant to be taken too seriously. It only tries to demonstrate how
+/// It is not meant to be taken seriously. It only tries to demonstrate how
 /// a class could be designed so that it could be made use of outside of any
-/// framework, and would also provide enough information to conveniently wrap it
-/// into an "ATLAS tool".
+/// framework, and would also provide enough information to be able to
+/// conveniently wrap it into an "ATLAS tool".
 ///
 class MuonCalibrator : public asg::AsgMessaging {
 

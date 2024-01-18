@@ -13,3 +13,9 @@ atlas_add_dictionary(MuonAnalysisToolsDict
    MuonAnalysisTools/MuonAnalysisToolsDict.h
    MuonAnalysisTools/selection.xml
    LINK_LIBRARIES MuonAnalysisToolsLib)
+
+if (NOT XAOD_STANDALONE)
+   atlas_add_component(MuonAnalysisTools
+      src/components/*.cxx
+      LINK_LIBRARIES MuonAnalysisToolsLib)
+endif()
