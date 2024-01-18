@@ -48,6 +48,15 @@ public:
     /// @}
 
 private:
+    /// @name Functions implementing the @c CP::SystematicsTool interface
+    /// @{
+
+    /// Configure the tool for a given set of systematic variations
+    StatusCode sysApplySystematicVariation(
+        const CP::SystematicSet &systConfig) override;
+
+    /// @}
+
     /// Tool performing the actual calibration
     MuonCalibrator m_calibrator;
 

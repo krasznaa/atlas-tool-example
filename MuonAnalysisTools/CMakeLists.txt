@@ -8,3 +8,8 @@ atlas_add_library(MuonAnalysisToolsLib
    MuonAnalysisTools/*.h Root/*.cxx
    PUBLIC_HEADERS MuonAnalysisTools
    LINK_LIBRARIES PATInterfaces AsgMessagingLib AsgTools xAODMuon)
+
+atlas_add_dictionary(MuonAnalysisToolsDict
+   MuonAnalysisTools/MuonAnalysisToolsDict.h
+   MuonAnalysisTools/selection.xml
+   LINK_LIBRARIES MuonAnalysisToolsLib)

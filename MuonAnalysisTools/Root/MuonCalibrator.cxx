@@ -14,6 +14,9 @@ MuonCalibrator::MuonCalibrator(const std::string& name)
 
 StatusCode MuonCalibrator::initialize() {
 
+    // Tell the user what's happening.
+    ATH_MSG_INFO("Initializing the EDM-less muon calibrator");
+
     // Set up the calibration data.
     m_nominal.push_back({-2.5f, 2.5f, -M_PI, M_PI, 0.f, 1e8f, 0.f});
 

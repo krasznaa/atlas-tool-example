@@ -16,6 +16,9 @@ MuonCalibratorTool::MuonCalibratorTool(const std::string &name)
 
 StatusCode MuonCalibratorTool::initialize() {
 
+    // Tell the user what's happening.
+    ATH_MSG_INFO("Initializing the dual-use muon calibrator tool");
+
     // Initialize the underlying tool.
     ANA_CHECK(m_calibrator.initialize());
 
@@ -58,6 +61,12 @@ CP::CorrectionCode MuonCalibratorTool::applyCalibration(
 
     // Return gracefully.
     return CP::CorrectionCode::Ok;
+}
+
+StatusCode MuonCalibratorTool::sysApplySystematicVariation(
+    const CP::SystematicSet &) {
+
+    return StatusCode::SUCCESS;
 }
 
 }  // namespace ATE
