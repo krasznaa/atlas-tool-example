@@ -18,7 +18,7 @@ StatusCode MuonCalibrator::initialize() {
     ATH_MSG_INFO("Initializing the EDM-less muon calibrator");
 
     // Set up the calibration data.
-    m_nominal.push_back({-2.5f, 2.5f, -M_PI, M_PI, 0.f, 1e8f, 0.f});
+    m_nominal.push_back({-5.f, 5.f, -M_PI, M_PI, 0.f, 1e10f, 0.f});
 
     m_foo.push_back({-2.5f, 0.f, -M_PI, M_PI, 0.f, 1e5f, 0.1f});
     m_foo.push_back({0.f, 2.5f, -M_PI, M_PI, 0.f, 1e5f, 0.05f});
@@ -45,8 +45,17 @@ CP::SystematicSet MuonCalibrator::recommendedSystematics() const {
 float MuonCalibrator::getCalibratedPt(float pt, float eta, float phi,
                                       const CP::SystematicSet& syst) const {
 
+    // Get phi into the -pi to pi range. Apparently reconstructed muons still
+    // have values outside of it sometimes. :-/
+    while (phi < -M_PI) {
+        phi += 2.f * M_PI;
+    }
+    while (phi >= M_PI) {
+        phi -= 2.f * M_PI;
+    }
+
     /// Lambda checking if a muon falls in a specific @c CalibData range.
-    auto in_range = [eta, phi](const CalibData& calib, float pt) {
+    auto in_range = [eta, phi](const CalibData& calib, float pt) -> bool {
         return (calib.min_eta <= eta && eta < calib.max_eta &&
                 calib.min_phi <= phi && phi < calib.max_phi &&
                 calib.min_pt <= pt && pt < calib.max_pt);
@@ -55,10 +64,11 @@ float MuonCalibrator::getCalibratedPt(float pt, float eta, float phi,
     /// Lambda applying a calibration to a muon.
     auto apply_calib = [&in_range, &pt, eta, phi](
                            const std::vector<CalibData>& calibs,
-                           auto operation) {
+                           auto operation) -> void {
         for (const auto& calib : calibs) {
             if (in_range(calib, pt)) {
                 pt = operation(pt, calib.variation);
+                return;
             }
         }
         throw std::out_of_range("Muon out of range for calibration");

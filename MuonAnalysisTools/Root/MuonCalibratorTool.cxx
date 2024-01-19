@@ -37,10 +37,14 @@ CP::CorrectionCode MuonCalibratorTool::applyCalibration(
     // errors. Everything else is allowed to make its way to a higher level.
     try {
         // Set the calibrated transverse momentum on the muon.
-        muon.setP4(m_calibrator.getCalibratedPt(
-                       muon.pt(), muon.eta(), muon.phi(), appliedSystematics()),
+        muon.setP4(m_calibrator.getCalibratedPt(muon.pt(), muon.eta(),
+                                                muon.phi(), m_syst),
                    muon.eta(), muon.phi());
     } catch (const std::out_of_range &) {
+        ATH_MSG_WARNING("Muon is outside of validity range: "
+                        << "pt = " << muon.pt() << ", "
+                        << "eta = " << muon.eta() << ", "
+                        << "phi = " << muon.phi());
         return CP::CorrectionCode::OutOfValidityRange;
     }
 
@@ -64,8 +68,10 @@ CP::CorrectionCode MuonCalibratorTool::applyCalibration(
 }
 
 StatusCode MuonCalibratorTool::sysApplySystematicVariation(
-    const CP::SystematicSet &) {
+    const CP::SystematicSet &syst) {
 
+    // Remember the active systematic variation(s).
+    m_syst = syst;
     return StatusCode::SUCCESS;
 }
 

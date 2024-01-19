@@ -9,6 +9,7 @@
 // Framework include(s).
 #include <AsgTools/AsgTool.h>
 #include <PATInterfaces/ISystematicsTool.h>
+#include <PATInterfaces/SystematicSet.h>
 #include <PATInterfaces/SystematicsTool.h>
 
 // System include(s).
@@ -57,6 +58,8 @@ private:
 
     /// @}
 
+    /// The active systematic variation(s) to apply
+    CP::SystematicSet m_syst;
     /// Tool performing the actual calibration
     MuonCalibrator m_calibrator;
 
