@@ -14,37 +14,43 @@ import os
 from xAODDataSource.Helpers import MakexAODDataFrame
 df = MakexAODDataFrame(os.getenv('ASG_TEST_FILE_MC'))
 
-# Create the global muon calibrator object/tool.
-ROOT.gROOT.ProcessLine(
+# Create the muon calibrator object(s).
+muCalibxAOD = ROOT.ATE.RDF.MuonCalibratorxAOD()
+muCalibxAOD.initialize().ignore()
+muCalib = ROOT.ATE.RDF.MuonCalibrator()
+muCalib.initialize().ignore()
+muVaryxAOD = ROOT.ATE.RDF.MuonVariatorxAOD()
+muVaryxAOD.initialize().ignore()
+muVary = ROOT.ATE.RDF.MuonVariator()
+muVary.initialize().ignore()
+
+# Create the calibrated muon pt as a new column, from the xAOD container.
+muon_pt_xaod = df.Define('muon_pt_calib', muCalibxAOD, ['Muons'])
+
+# Create the calibrated muon pt as a new column, from primitive columns.
+# For this, first set up the primitive columns from the xAOD container.
+code = '''
+   std::vector<float> result;
+   result.reserve(Muons.size());
+   for (const xAOD::Muon* muon : Muons) {
+      result.push_back(muon->%s());
+   }
+   return result;
    '''
-   ATE::MuonCalibrator gCalibrator("RDFMuonCalibrator");
-   gCalibrator.initialize().ignore();
-   ''')
+muon_primitive = df.Define('muon_eta', code % 'eta') \
+                   .Define('muon_phi', code % 'phi') \
+                   .Define('muon_pt',  code % 'pt')
+# Now create the calibrated column.
+muon_pt_primitive = muon_primitive.Define('muon_pt_calib', muCalib,            \
+                                          ['muon_pt', 'muon_eta', 'muon_phi'])
 
-# Create the calibrated muon pt as a new column, using hand-written code.
-muon_manual = \
-   df.Define('muon_pt',
-             '''
-             std::vector<float> result;
-             result.reserve(Muons.size());
-             for(const xAOD::Muon* mu : Muons) {
-                result.push_back(gCalibrator.getCalibratedPt(
-                   mu->pt(), mu->eta(), mu->phi()));
-             }
-             return result;
-             ''')
-
-# Create the calibrated muon pt as a new column, using a helper functor.
-muon_functor = \
-   df.Define('muon_pt', ROOT.ATE.AddCalibratedMuonPt(), ['Muons'])
-
-# Make a histogram of the calibrated muon pt.
+# Make a histogram of the calibrated muon pts.
 canvas = ROOT.TCanvas('canvas', 'canvas', 1600, 600)
 canvas.Divide(2)
 canvas.cd(1).SetLogy()
-hist1 = muon_manual.Histo1D('muon_pt')
+hist1 = muon_pt_xaod.Histo1D('muon_pt_calib')
 hist1.Draw()
 canvas.cd(2).SetLogy()
-hist2 = muon_functor.Histo1D('muon_pt')
+hist2 = muon_pt_primitive.Histo1D('muon_pt_calib')
 hist2.Draw()
 canvas.SaveAs('muon_pt.png')

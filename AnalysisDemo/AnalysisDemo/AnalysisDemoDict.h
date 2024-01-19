@@ -3,7 +3,6 @@
 #define ANALYSISDEMO_ANALYSIDEMODICT_H
 
 // Local include(s).
-#include "AnalysisDemo/AddCalibratedMuonPt.h"
 #include "AnalysisDemo/AnalysisAlg.h"
 
 #endif  // ANALYSISDEMO_ANALYSIDEMODICT_H

@@ -3,6 +3,5 @@
 
    <!-- Type(s) in the package. -->
    <class name="ATE::AnalysisAlg" />
-   <class name="ATE::AddCalibratedMuonPt" />
 
 </lcgdict>

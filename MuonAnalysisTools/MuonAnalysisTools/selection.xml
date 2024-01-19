@@ -3,6 +3,10 @@
 
     <!-- Classes in the package: -->
     <class name="ATE::MuonCalibrator" />
+    <class name="ATE::RDF::MuonCalibrator" />
+    <class name="ATE::RDF::MuonCalibratorxAOD" />
+    <class name="ATE::RDF::MuonVariator" />
+    <class name="ATE::RDF::MuonVariatorxAOD" />
     <class name="ATE::MuonCalibratorTool" />
 
 </lcgdict>
