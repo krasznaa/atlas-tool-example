@@ -1,7 +1,8 @@
 <!-- Copyright (C) 2002-2024 CERN for the benefit of the ATLAS collaboration -->
 <lcgdict>
 
-   <!-- Component(s) in the package. -->
+   <!-- Type(s) in the package. -->
    <class name="ATE::AnalysisAlg" />
+   <class name="ATE::AddCalibratedMuonPt" />
 
 </lcgdict>
