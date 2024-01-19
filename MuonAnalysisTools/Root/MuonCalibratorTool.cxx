@@ -12,7 +12,7 @@
 namespace ATE {
 
 MuonCalibratorTool::MuonCalibratorTool(const std::string &name)
-    : asg::AsgTool(name), m_calibrator(name) {}
+    : asg::AsgTool(name), m_calibrator(this->name()) {}
 
 StatusCode MuonCalibratorTool::initialize() {
 

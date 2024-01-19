@@ -16,6 +16,13 @@ atlas_add_dictionary(AnalysisDemoDict
    AnalysisDemo/selection.xml
    LINK_LIBRARIES AnalysisDemoLib)
 
+if(NOT XAOD_STANDALONE)
+   atlas_add_component(AnalysisDemo
+      src/components/*.cxx
+      LINK_LIBRARIES AnalysisDemoLib)
+endif()
+
 # Install files from the package.
 atlas_install_python_modules(python/*.py)
 atlas_install_scripts(share/*_eljob.py)
+atlas_install_joboptions(share/*_jobOptions.py)

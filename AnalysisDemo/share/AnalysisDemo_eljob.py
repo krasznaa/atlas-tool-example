@@ -8,10 +8,11 @@ import ROOT
 ROOT.xAOD.Init().ignore()
 
 # Set up the sample to run on.
+import os
 sh = ROOT.SH.SampleHandler()
 sh.setMetaString('nc_tree', 'CollectionTree')
 sample = ROOT.SH.SampleLocal('MC')
-sample.add('/${ASG_TEST_FILE_MC}')
+sample.add(os.getenv('ASG_TEST_FILE_MC'))
 sh.add(sample)
 
 # Create an EventLoop job.
