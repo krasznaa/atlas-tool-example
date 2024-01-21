@@ -12,8 +12,8 @@ atlas_add_library(AnalysisDemoLib
    PRIVATE_LINK_LIBRARIES AsgMessagingLib)
 
 atlas_add_dictionary(AnalysisDemoDict
-   AnalysisDemo/AnalysisDemoDict.h
-   AnalysisDemo/selection.xml
+   Root/AnalysisDemoDict.h
+   Root/selection.xml
    LINK_LIBRARIES AnalysisDemoLib)
 
 if(NOT XAOD_STANDALONE)
