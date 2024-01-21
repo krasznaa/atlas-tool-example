@@ -37,6 +37,8 @@ build results, the following example jobs can be run.
     * `AnalysisDemo_rdf.py`: Runs a [ROOT::RDataFrame](https://root.cern/doc/v630/classROOT_1_1RDataFrame.html)
       based job that would use the "EDM-less" `ATE::MuonCalibrator` type for
       creating columns with the calibrated muon momenta;
+    * `AnalysisDemo_rdf`: Same as the previous one, just implemented in C\+\+
+      instead of Python;
   - When building the project on top of AthAnalysis:
     * `athena.py AnalysisDemo/AnalysisDemo_jobOptions.py`: Run an Athena based
       job that would use the dual-use `ATE::MuonCalibratorTool` for creating a
