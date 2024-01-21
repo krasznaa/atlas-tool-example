@@ -15,8 +15,8 @@ atlas_add_library(MuonAnalysisToolsLib
                   xAODMuon)
 
 atlas_add_dictionary(MuonAnalysisToolsDict
-   MuonAnalysisTools/MuonAnalysisToolsDict.h
-   MuonAnalysisTools/selection.xml
+   Root/MuonAnalysisToolsDict.h
+   Root/selection.xml
    LINK_LIBRARIES MuonAnalysisToolsLib)
 
 if (NOT XAOD_STANDALONE)
