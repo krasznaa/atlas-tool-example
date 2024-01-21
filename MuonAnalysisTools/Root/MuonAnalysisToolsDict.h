@@ -4,6 +4,7 @@
 
 // Local include(s).
 #include "MuonAnalysisTools/MuonCalibrator.h"
+#include "MuonAnalysisTools/MuonCalibratorRDF.h"
 #include "MuonAnalysisTools/MuonCalibratorTool.h"
 
 #endif  // MUONANALYSISTOOLS_MUONANALYSISTOOLSDICT_H

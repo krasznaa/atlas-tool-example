@@ -19,10 +19,6 @@ muCalibxAOD = ROOT.ATE.RDF.MuonCalibratorxAOD()
 muCalibxAOD.initialize().ignore()
 muCalib = ROOT.ATE.RDF.MuonCalibrator()
 muCalib.initialize().ignore()
-muVaryxAOD = ROOT.ATE.RDF.MuonVariatorxAOD()
-muVaryxAOD.initialize().ignore()
-muVary = ROOT.ATE.RDF.MuonVariator()
-muVary.initialize().ignore()
 
 # Create the calibrated muon pt as a new column, from the xAOD container.
 muon_pt_xaod = df.Define('muon_pt_calib', muCalibxAOD, ['Muons'])

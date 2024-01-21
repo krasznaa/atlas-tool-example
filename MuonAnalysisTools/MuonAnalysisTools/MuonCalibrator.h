@@ -7,15 +7,8 @@
 #include <AsgMessaging/StatusCode.h>
 #include <PATInterfaces/SystematicSet.h>
 
-// EDM include(s).
-#include <xAODMuon/MuonContainer.h>
-
-// ROOT include(s).
-#include <ROOT/RVec.hxx>
-
 // System include(s).
 #include <string>
-#include <vector>
 
 namespace ATE {
 
@@ -88,61 +81,6 @@ private:
 
 };  // class MuonCalibrator
 
-namespace RDF {
-
-/// Functor that could be used directly with @c ROOT::RDataFrame::Define
-class MuonCalibrator : public ATE::MuonCalibrator {
-
-public:
-    // Inherit the base class's constructor(s).
-    using ATE::MuonCalibrator::MuonCalibrator;
-
-    /// Operator applying the calibration to a single muon
-    std::vector<float> operator()(const std::vector<float>& pt,
-                                  const std::vector<float>& eta,
-                                  const std::vector<float>& phi) const;
-
-};  // class MuonCalibrator
-
-/// Functor that could be used with @c ROOT::RDataFrame::Define, on an xAOD
-class MuonCalibratorxAOD : public ATE::MuonCalibrator {
-
-public:
-    // Inherit the base class's constructor(s).
-    using ATE::MuonCalibrator::MuonCalibrator;
-
-    /// Operator applying the calibration to a single muon
-    std::vector<float> operator()(const xAOD::MuonContainer& muon) const;
-
-};  // class MuonCalibratorxAOD
-
-/// Functor that could be used directly with @c ROOT::RDataFrame::Vary
-class MuonVariator : public ATE::MuonCalibrator {
-
-public:
-    // Inherit the base class's constructor(s).
-    using ATE::MuonCalibrator::MuonCalibrator;
-
-    /// Operator applying the calibration to a single muon
-    std::vector<ROOT::RVecF> operator()(const std::vector<float>& pt,
-                                        const std::vector<float>& eta,
-                                        const std::vector<float>& phi) const;
-
-};  // class MuonVariator
-
-/// Functor that could be used with @c ROOT::RDataFrame::Vary, on an xAOD
-class MuonVariatorxAOD : public ATE::MuonCalibrator {
-
-public:
-    // Inherit the base class's constructor(s).
-    using ATE::MuonCalibrator::MuonCalibrator;
-
-    /// Operator applying the calibration to a single muon
-    std::vector<ROOT::RVecF> operator()(const xAOD::MuonContainer& muon) const;
-
-};  // class MuonVariatorxAOD
-
-}  // namespace RDF
 }  // namespace ATE
 
 #endif  // MUONANALYSISTOOLS_MUONCALIBRATOR_H
