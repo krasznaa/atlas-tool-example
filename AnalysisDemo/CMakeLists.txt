@@ -3,6 +3,10 @@
 # Set the name of the package.
 atlas_subdir(AnalysisDemo)
 
+# Find the needed external(s).
+find_package(ROOT COMPONENTS Core ROOTVecOps Gpad)
+find_package(VDT)
+
 # Component(s) in the package.
 atlas_add_library(AnalysisDemoLib
    AnalysisDemo/*.h Root/*.cxx
@@ -20,6 +24,16 @@ if(NOT XAOD_STANDALONE)
    atlas_add_component(AnalysisDemo
       src/components/*.cxx
       LINK_LIBRARIES AnalysisDemoLib)
+endif()
+
+# Executable(s) in the package.
+if(XAOD_STANDALONE)
+   atlas_add_executable(AnalysisDemo_rdf
+      utils/AnalysisDemo_rdf.cxx
+      INCLUDE_DIRS ${ROOT_INCLUDE_DIRS} ${VDT_INCLUDE_DIRS}
+      LINK_LIBRARIES ${ROOT_LIBRARIES} ${VDT_LIBRARIES}
+                     xAODRootAccess xAODDataSourceLib AsgMessagingLib
+                     MuonAnalysisToolsLib xAODMuon)
 endif()
 
 # Install files from the package.
