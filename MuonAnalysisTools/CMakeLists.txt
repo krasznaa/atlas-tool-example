@@ -5,14 +5,15 @@ atlas_subdir(MuonAnalysisTools)
 
 # Find the needed external(s).
 find_package(ROOT COMPONENTS Core ROOTVecOps)
+find_package(VDT)
 
 # Component(s) in the package.
 atlas_add_library(MuonAnalysisToolsLib
    MuonAnalysisTools/*.h Root/*.cxx
    PUBLIC_HEADERS MuonAnalysisTools
-   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
-   LINK_LIBRARIES ${ROOT_LIBRARIES} PATInterfaces AsgMessagingLib AsgTools
-                  xAODMuon)
+   INCLUDE_DIRS ${ROOT_INCLUDE_DIRS} ${VDT_INCLUDE_DIRS}
+   LINK_LIBRARIES ${ROOT_LIBRARIES} ${VDT_LIBRARIES} PATInterfaces
+                  AsgMessagingLib AsgTools xAODMuon)
 
 atlas_add_dictionary(MuonAnalysisToolsDict
    Root/MuonAnalysisToolsDict.h

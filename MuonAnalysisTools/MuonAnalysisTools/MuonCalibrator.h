@@ -79,6 +79,9 @@ private:
     /// Calibration data for the "MUON_BAR" systematic variation
     std::vector<CalibData> m_bar;
 
+    /// The name of the object. Needed to be able to copy the tool properly.
+    std::string m_name;
+
 };  // class MuonCalibrator
 
 }  // namespace ATE

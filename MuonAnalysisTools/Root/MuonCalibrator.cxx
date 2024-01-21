@@ -10,16 +10,16 @@
 namespace ATE {
 
 MuonCalibrator::MuonCalibrator(const std::string& name)
-    : asg::AsgMessaging(name) {}
+    : asg::AsgMessaging(name), m_name(name) {}
 
 MuonCalibrator::MuonCalibrator(const MuonCalibrator& parent)
-    : asg::AsgMessaging(parent.msg().name()),
+    : asg::AsgMessaging(m_name),
       m_nominal(parent.m_nominal),
       m_foo(parent.m_foo),
       m_bar(parent.m_bar) {}
 
 MuonCalibrator::MuonCalibrator(MuonCalibrator&& parent)
-    : asg::AsgMessaging(parent.msg().name()),
+    : asg::AsgMessaging(m_name),
       m_nominal(std::move(parent.m_nominal)),
       m_foo(std::move(parent.m_foo)),
       m_bar(std::move(parent.m_bar)) {}
