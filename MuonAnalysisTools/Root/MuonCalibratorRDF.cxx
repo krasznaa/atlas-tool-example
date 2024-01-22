@@ -46,7 +46,7 @@ std::vector<float> MuonCalibratorxAOD::operator()(
     return result;
 }
 
-std::vector<ROOT::RVecF> MuonVariator::operator()(
+ROOT::RVec<std::vector<float> > MuonVariator::operator()(
     const std::vector<float>& pt, const std::vector<float>& eta,
     const std::vector<float>& phi) const {
 
@@ -56,39 +56,40 @@ std::vector<ROOT::RVecF> MuonVariator::operator()(
     }
 
     // Create the output vector.
-    std::vector<ROOT::RVecF> result;
-    result.reserve(pt.size());
+    ROOT::RVec<std::vector<float> > result;
+    result.resize(m_recommendedSystematics.size());
 
     // Fill it.
-    for (size_t i = 0; i < pt.size(); ++i) {
-        result.push_back(
-            {getCalibratedPt(pt[i], eta[i], phi[i], {{"MUON_FOO", 1}}),
-             getCalibratedPt(pt[i], eta[i], phi[i], {{"MUON_FOO", -1}}),
-             getCalibratedPt(pt[i], eta[i], phi[i], {{"MUON_BAR", 1}}),
-             getCalibratedPt(pt[i], eta[i], phi[i], {{"MUON_BAR", -1}})});
+    auto syst_it = m_recommendedSystematics.begin();
+    auto syst_end = m_recommendedSystematics.end();
+    for (std::size_t i = 0; syst_it != syst_end; ++i, ++syst_it) {
+        result[i].reserve(pt.size());
+        for (std::size_t j = 0; j < pt.size(); ++j) {
+            result[i].push_back(
+                getCalibratedPt(pt[j], eta[i], phi[i], {*syst_it}));
+        }
     }
 
     // Return it.
     return result;
 }
 
-std::vector<ROOT::RVecF> MuonVariatorxAOD::operator()(
+ROOT::RVec<std::vector<float> > MuonVariatorxAOD::operator()(
     const xAOD::MuonContainer& muons) const {
 
     // Create the output vector.
-    std::vector<ROOT::RVecF> result;
-    result.reserve(muons.size());
+    ROOT::RVec<std::vector<float> > result;
+    result.resize(m_recommendedSystematics.size());
 
     // Fill it.
-    for (const xAOD::Muon* muon : muons) {
-        result.push_back({getCalibratedPt(muon->pt(), muon->eta(), muon->phi(),
-                                          {{"MUON_FOO", 1}}),
-                          getCalibratedPt(muon->pt(), muon->eta(), muon->phi(),
-                                          {{"MUON_FOO", -1}}),
-                          getCalibratedPt(muon->pt(), muon->eta(), muon->phi(),
-                                          {{"MUON_BAR", 1}}),
-                          getCalibratedPt(muon->pt(), muon->eta(), muon->phi(),
-                                          {{"MUON_BAR", -1}})});
+    auto syst_it = m_recommendedSystematics.begin();
+    auto syst_end = m_recommendedSystematics.end();
+    for (std::size_t i = 0; syst_it != syst_end; ++i, ++syst_it) {
+        result[i].reserve(muons.size());
+        for (const xAOD::Muon* muon : muons) {
+            result[i].push_back(getCalibratedPt(muon->pt(), muon->eta(),
+                                                muon->phi(), {*syst_it}));
+        }
     }
 
     // Return it.

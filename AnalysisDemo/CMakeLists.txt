@@ -4,7 +4,7 @@
 atlas_subdir(AnalysisDemo)
 
 # Find the needed external(s).
-find_package(ROOT COMPONENTS Core ROOTVecOps Gpad)
+find_package(ROOT COMPONENTS Core Gpad ROOTVecOps ROOTDataFrame)
 find_package(VDT)
 
 # Component(s) in the package.

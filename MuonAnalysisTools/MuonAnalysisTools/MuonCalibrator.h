@@ -6,6 +6,7 @@
 #include <AsgMessaging/AsgMessaging.h>
 #include <AsgMessaging/StatusCode.h>
 #include <PATInterfaces/SystematicSet.h>
+#include <PATInterfaces/SystematicVariation.h>
 
 // System include(s).
 #include <string>
@@ -59,6 +60,12 @@ public:
     ///
     float getCalibratedPt(float pt, float eta, float phi,
                           const CP::SystematicSet& syst = {}) const;
+
+protected:
+    /// List of all affecting systematics
+    std::vector<CP::SystematicVariation> m_affectingSystematics;
+    /// List of all recommended systematics
+    std::vector<CP::SystematicVariation> m_recommendedSystematics;
 
 private:
     /// Calibration data type

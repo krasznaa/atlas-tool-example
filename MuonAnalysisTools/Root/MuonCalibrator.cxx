@@ -14,12 +14,16 @@ MuonCalibrator::MuonCalibrator(const std::string& name)
 
 MuonCalibrator::MuonCalibrator(const MuonCalibrator& parent)
     : asg::AsgMessaging(parent.m_name),
+      m_affectingSystematics(parent.m_affectingSystematics),
+      m_recommendedSystematics(parent.m_recommendedSystematics),
       m_nominal(parent.m_nominal),
       m_foo(parent.m_foo),
       m_bar(parent.m_bar) {}
 
 MuonCalibrator::MuonCalibrator(MuonCalibrator&& parent)
     : asg::AsgMessaging(parent.m_name),
+      m_affectingSystematics(std::move(parent.m_affectingSystematics)),
+      m_recommendedSystematics(std::move(parent.m_recommendedSystematics)),
       m_nominal(std::move(parent.m_nominal)),
       m_foo(std::move(parent.m_foo)),
       m_bar(std::move(parent.m_bar)) {}
@@ -29,15 +33,21 @@ StatusCode MuonCalibrator::initialize() {
     // Tell the user what's happening.
     ATH_MSG_INFO("Initializing the EDM-less muon calibrator");
 
+    // Set up the systematic variations.
+    m_recommendedSystematics = {{"MUON_FOO", 1}, {"MUON_FOO", -1}};
+    m_affectingSystematics = m_recommendedSystematics;
+    m_affectingSystematics.insert(m_affectingSystematics.end(),
+                                  {{"MUON_BAR", 1}, {"MUON_BAR", -1}});
+
     // Set up the calibration data.
     m_nominal.push_back({-5.f, 5.f, -M_PI, M_PI, 0.f, 1e10f, 0.f});
 
-    m_foo.push_back({-2.5f, 0.f, -M_PI, M_PI, 0.f, 1e5f, 0.1f});
-    m_foo.push_back({0.f, 2.5f, -M_PI, M_PI, 0.f, 1e5f, 0.05f});
-    m_foo.push_back({-2.5f, 2.5f, -M_PI, M_PI, 0.f, 1e8f, 0.03f});
+    m_foo.push_back({-5.f, 0.f, -M_PI, M_PI, 0.f, 1e5f, 0.1f});
+    m_foo.push_back({0.f, 5.f, -M_PI, M_PI, 0.f, 1e5f, 0.05f});
+    m_foo.push_back({-5.f, 5.f, -M_PI, M_PI, 0.f, 1e10f, 0.03f});
 
-    m_bar.push_back({-2.5f, 2.5f, -M_PI, M_PI, 0.f, 1e5f, 0.1f});
-    m_bar.push_back({-2.5f, 2.5f, -M_PI, M_PI, 0.f, 1e8f, 0.2f});
+    m_bar.push_back({-5.f, 5.f, -M_PI, M_PI, 0.f, 1e5f, 0.1f});
+    m_bar.push_back({-5.f, 5.f, -M_PI, M_PI, 0.f, 1e10f, 0.2f});
 
     // Return gracefully.
     return StatusCode::SUCCESS;
@@ -45,13 +55,12 @@ StatusCode MuonCalibrator::initialize() {
 
 CP::SystematicSet MuonCalibrator::affectingSystematics() const {
 
-    return {
-        {"MUON_FOO", 1}, {"MUON_FOO", -1}, {"MUON_BAR", 1}, {"MUON_BAR", -1}};
+    return m_affectingSystematics;
 }
 
 CP::SystematicSet MuonCalibrator::recommendedSystematics() const {
 
-    return {{"MUON_FOO", 1}, {"MUON_FOO", -1}};
+    return m_recommendedSystematics;
 }
 
 float MuonCalibrator::getCalibratedPt(float pt, float eta, float phi,

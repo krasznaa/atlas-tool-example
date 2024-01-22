@@ -14,6 +14,8 @@
 #include <TString.h>
 #include <TSystem.h>
 
+#include <ROOT/RDFHelpers.hxx>
+
 // System include(s).
 #include <cstdlib>
 
@@ -34,8 +36,16 @@ int main() {
     ATE::RDF::MuonCalibrator muCalib;
     ANA_CHECK(muCalib.initialize());
 
+    // Create the muon "variator" object(s).
+    ATE::RDF::MuonVariatorxAOD muVarxAOD;
+    ANA_CHECK(muVarxAOD.initialize());
+    ATE::RDF::MuonVariator muVar;
+    ANA_CHECK(muVar.initialize());
+
     // Create the calibrated muon pt as a new column, from the xAOD container.
-    auto muon_pt_xaod = df.Define("muon_pt_calib", muCalibxAOD, {"Muons"});
+    auto muon_pt_xaod = df.Define("muon_pt_calib", muCalibxAOD, {"Muons"})
+                            .Vary("muon_pt_calib", muVarxAOD, {"Muons"},
+                                  {"foo_up", "foo_down"});
 
     // Create the calibrated muon pt as a new column, from primitive columns.
     // For this, first set up the primitive columns from the xAOD container.
@@ -71,18 +81,28 @@ int main() {
                                       {"Muons"});
 
     // Now create the calibrated column.
-    auto muon_pt_primitive = muon_primitive.Define(
-        "muon_pt_calib", muCalib, {"muon_pt", "muon_eta", "muon_phi"});
+    auto muon_pt_primitive =
+        muon_primitive
+            .Define("muon_pt_calib", muCalib,
+                    {"muon_pt", "muon_eta", "muon_phi"})
+            .Vary("muon_pt_calib", muVar, {"muon_pt", "muon_eta", "muon_phi"},
+                  {"foo_up", "foo_down"});
 
     // Make a histogram of the calibrated muon pts.
     TCanvas canvas{"canvas", "canvas", 1600, 600};
     canvas.Divide(2);
     canvas.cd(1)->SetLogy();
     auto hist1 = muon_pt_xaod.Histo1D("muon_pt_calib");
-    hist1->Draw();
+    auto hist1_var = ROOT::RDF::Experimental::VariationsFor(hist1);
+    hist1_var["nominal"].Draw();
+    hist1_var["muon_pt_calib:foo_up"].Draw("SAME");
+    hist1_var["muon_pt_calib:foo_down"].Draw("SAME");
     canvas.cd(2)->SetLogy();
     auto hist2 = muon_pt_primitive.Histo1D("muon_pt_calib");
-    hist2->Draw();
+    auto hist2_var = ROOT::RDF::Experimental::VariationsFor(hist2);
+    hist2_var["nominal"].Draw();
+    hist2_var["muon_pt_calib:foo_up"].Draw("SAME");
+    hist2_var["muon_pt_calib:foo_down"].Draw("SAME");
     canvas.SaveAs("muon_pt.png");
 
     // Return gracefully.

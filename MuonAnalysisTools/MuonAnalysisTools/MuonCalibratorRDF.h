@@ -51,9 +51,9 @@ public:
     using ATE::MuonCalibrator::MuonCalibrator;
 
     /// Operator applying the calibration to a single muon
-    std::vector<ROOT::RVecF> operator()(const std::vector<float>& pt,
-                                        const std::vector<float>& eta,
-                                        const std::vector<float>& phi) const;
+    ROOT::RVec<std::vector<float> > operator()(
+        const std::vector<float>& pt, const std::vector<float>& eta,
+        const std::vector<float>& phi) const;
 
 };  // class MuonVariator
 
@@ -65,7 +65,8 @@ public:
     using ATE::MuonCalibrator::MuonCalibrator;
 
     /// Operator applying the calibration to a single muon
-    std::vector<ROOT::RVecF> operator()(const xAOD::MuonContainer& muon) const;
+    ROOT::RVec<std::vector<float> > operator()(
+        const xAOD::MuonContainer& muon) const;
 
 };  // class MuonVariatorxAOD
 
